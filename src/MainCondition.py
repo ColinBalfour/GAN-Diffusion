@@ -20,7 +20,7 @@ def main(model_config=None):
         "grad_clip": 1.,
         "device": "cuda:0",
         "w": 1.8,
-        "save_dir": "./CheckpointsCondition/",
+        "save_dir": "./CheckpointsCondition/3",
         "training_load_weight": None,
         "test_load_weight": "DiffusionConditionWeight.pt",
         "sampled_dir": "./SampledImgs/",

@@ -35,8 +35,8 @@ class GaussianDiffusionTrainer(nn.Module):
         alpha_bar = torch.cumprod(1 - betas, dim=0)
         
         # calculations for diffusion q(x_t | x_{t-1}) and others
-        self.register_buffer('sqrt_alphas_bar', torch.sqrt(alpha_bar))
-        self.register_buffer('sqrt_one_minus_alphas_bar', torch.sqrt(1 - alpha_bar))
+        self.register_buffer('sqrt_alphas_bar', torch.sqrt(alpha_bar).view(-1, 1, 1, 1))
+        self.register_buffer('sqrt_one_minus_alphas_bar', torch.sqrt(1 - alpha_bar).view(-1, 1, 1, 1))
 
     def forward(self, x_0, labels):
         """
@@ -48,14 +48,14 @@ class GaussianDiffusionTrainer(nn.Module):
         """
         
         # pick batched random timestep below self.T. (torch.Size([batch_size]))
-        t = torch.randint(0, self.T, (x_0.shape[0],))
+        t = torch.randint(0, self.T, (x_0.shape[0],)).to(x_0.device)
         
         # Generate random noise from normal distribution with 0 mean and 1 variance (torch.Size([batch_size, 3, 32, 32])
-        noise = torch.randn_like(x_0)
+        noise = torch.randn_like(x_0, device=x_0.device)
         
         # Compute the x_t (images obtained after corrupting the input images by t times)  (torch.Size([batch_size, 3, 32, 32])
-        mean = self.get_buffer('sqrt_alphas_bar')[t] * x_0
-        std = self.get_buffer('sqrt_one_minus_alphas_bar')[t]
+        mean = self.get_buffer('sqrt_alphas_bar')[t].to(x_0.device) * x_0
+        std = self.get_buffer('sqrt_one_minus_alphas_bar')[t].to(x_0.device)
         x_t = mean + std * noise
         
         # Call your diffusion model to get the predict the noise -  t is a random index
@@ -91,9 +91,9 @@ class GaussianDiffusionSampler(nn.Module):
         alpha_bar = torch.cumprod(1 - betas, dim=0)
         
         # calculations for diffusion q(x_t | x_{t-1}) and others
-        self.register_buffer('alphas', 1 - betas)
+        self.register_buffer('alphas', (1 - betas).view(-1, 1, 1, 1))
         # self.register_buffer('sqrt_alphas_bar', torch.sqrt(alpha_bar))
-        self.register_buffer('sqrt_one_minus_alphas_bar', torch.sqrt(1 - alpha_bar))
+        self.register_buffer('sqrt_one_minus_alphas_bar', torch.sqrt(1 - alpha_bar).view(-1, 1, 1, 1))
 
     def forward(self, x_T, labels):
         """
@@ -109,7 +109,7 @@ class GaussianDiffusionSampler(nn.Module):
         for time_step in reversed(range(self.T)):
 
             # YOUR IMPLEMENTATION HERE!
-            t = time_step + 1
+            t = time_step
             
             z = torch.randn_like(x_t) if time_step > 0 else 0
             a_t = alphas[t]
