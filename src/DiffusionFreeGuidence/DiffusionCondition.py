@@ -65,7 +65,7 @@ class GaussianDiffusionTrainer(nn.Module):
         pred = self.model(x_t, t, labels)
 
         # Compute your loss for model prediction and ground truth noise (that you just generated)
-        loss = F.mse_loss(pred, x_0)
+        loss = F.mse_loss(pred, noise)
 
         return loss
 
@@ -108,6 +108,7 @@ class GaussianDiffusionSampler(nn.Module):
         """
 
         alphas = self.get_buffer("alphas")
+        betas = self.get_buffer("betas")
         # sqrt_alphas_bar = self.get_buffer('sqrt_alphas_bar')
         sqrt_one_minus_alphas_bar = self.get_buffer("sqrt_one_minus_alphas_bar")
 
@@ -122,15 +123,18 @@ class GaussianDiffusionSampler(nn.Module):
             # hopefully works?
             t_tensor = torch.tensor([t]).to(x_T.device)
 
+            # beta_sqrt = betas[t].sqrt()
+
             x_t = (
                 1
-                / a_t
+                / torch.sqrt(a_t)
                 * (
                     x_t
                     - ((1 - a_t) / sqrt_one_minus_alphas_bar[t])
                     * self.model(x_t, t_tensor, labels)
-                    + sqrt_one_minus_alphas_bar[t] * z
                 )
+                # + beta_sqrt * z
+                + sqrt_one_minus_alphas_bar[t] * z
             )
 
             assert torch.isnan(x_t).int().sum() == 0, "nan in tensor."
