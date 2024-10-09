@@ -1,5 +1,3 @@
-
-   
 import math
 from telnetlib import PRAGMA_HEARTBEAT
 import torch
@@ -15,6 +13,7 @@ def drop_connect(x, drop_ratio):
     x.div_(keep_ratio)
     x.mul_(mask)
     return x
+
 
 class Swish(nn.Module):
     def forward(self, x):
@@ -51,7 +50,9 @@ class ConditionalEmbedding(nn.Module):
         assert d_model % 2 == 0
         super().__init__()
         self.condEmbedding = nn.Sequential(
-            nn.Embedding(num_embeddings=num_labels + 1, embedding_dim=d_model, padding_idx=0),
+            nn.Embedding(
+                num_embeddings=num_labels + 1, embedding_dim=d_model, padding_idx=0
+            ),
             nn.Linear(d_model, dim),
             Swish(),
             nn.Linear(dim, dim),
@@ -117,7 +118,6 @@ class AttnBlock(nn.Module):
         return x + h
 
 
-
 class ResBlock(nn.Module):
     def __init__(self, in_ch, out_ch, tdim, dropout, attn=True):
         super().__init__()
@@ -149,7 +149,6 @@ class ResBlock(nn.Module):
         else:
             self.attn = nn.Identity()
 
-
     def forward(self, x, temb, labels):
         h = self.block1(x)
         h += self.temb_proj(temb)[:, :, None, None]
@@ -174,23 +173,35 @@ class UNet(nn.Module):
         for i, mult in enumerate(ch_mult):
             out_ch = ch * mult
             for _ in range(num_res_blocks):
-                self.downblocks.append(ResBlock(in_ch=now_ch, out_ch=out_ch, tdim=tdim, dropout=dropout))
+                self.downblocks.append(
+                    ResBlock(in_ch=now_ch, out_ch=out_ch, tdim=tdim, dropout=dropout)
+                )
                 now_ch = out_ch
                 chs.append(now_ch)
             if i != len(ch_mult) - 1:
                 self.downblocks.append(DownSample(now_ch))
                 chs.append(now_ch)
 
-        self.middleblocks = nn.ModuleList([
-            ResBlock(now_ch, now_ch, tdim, dropout, attn=True),
-            ResBlock(now_ch, now_ch, tdim, dropout, attn=False),
-        ])
+        self.middleblocks = nn.ModuleList(
+            [
+                ResBlock(now_ch, now_ch, tdim, dropout, attn=True),
+                ResBlock(now_ch, now_ch, tdim, dropout, attn=False),
+            ]
+        )
 
         self.upblocks = nn.ModuleList()
         for i, mult in reversed(list(enumerate(ch_mult))):
             out_ch = ch * mult
             for _ in range(num_res_blocks + 1):
-                self.upblocks.append(ResBlock(in_ch=chs.pop() + now_ch, out_ch=out_ch, tdim=tdim, dropout=dropout, attn=False))
+                self.upblocks.append(
+                    ResBlock(
+                        in_ch=chs.pop() + now_ch,
+                        out_ch=out_ch,
+                        tdim=tdim,
+                        dropout=dropout,
+                        attn=False,
+                    )
+                )
                 now_ch = out_ch
             if i != 0:
                 self.upblocks.append(UpSample(now_ch))
@@ -199,9 +210,8 @@ class UNet(nn.Module):
         self.tail = nn.Sequential(
             nn.GroupNorm(32, now_ch),
             Swish(),
-            nn.Conv2d(now_ch, 3, 3, stride=1, padding=1)
+            nn.Conv2d(now_ch, 3, 3, stride=1, padding=1),
         )
- 
 
     def forward(self, x, t, labels):
         # Timestep embedding
@@ -227,11 +237,16 @@ class UNet(nn.Module):
         return h
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     batch_size = 8
     model = UNet(
-        T=1000, num_labels=10, ch=128, ch_mult=[1, 2, 2, 2],
-        num_res_blocks=2, dropout=0.1)
+        T=1000,
+        num_labels=10,
+        ch=128,
+        ch_mult=[1, 2, 2, 2],
+        num_res_blocks=2,
+        dropout=0.1,
+    )
     x = torch.randn(batch_size, 3, 32, 32)
     t = torch.randint(1000, size=[batch_size])
     labels = torch.randint(10, size=[batch_size])
@@ -242,4 +257,3 @@ if __name__ == '__main__':
     # y = resB(x, t, labels)
     y = model(x, t, labels)
     print(y.shape)
-
