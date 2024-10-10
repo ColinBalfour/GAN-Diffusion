@@ -9,7 +9,7 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 
 class Pipeline:
-    def __init__(self):
+    def __init__(self, synthetic_data_loader=None):
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
         transform = transforms.Compose(
@@ -25,9 +25,16 @@ class Pipeline:
         trainset = torchvision.datasets.CIFAR10(
             root="./data", train=True, download=True, transform=transform
         )
-        self.trainloader = torch.utils.data.DataLoader(
+        original_trainloader = torch.utils.data.DataLoader(
             trainset, batch_size=32, shuffle=True, num_workers=2
         )
+
+        if synthetic_data_loader is not None:
+            # Combine original CIFAR-10 data with synthetic data
+            self.trainloader = torch.utils.data.ConcatDataset([original_trainloader, synthetic_data_loader])
+        else:
+            # Only use original data if no synthetic data is provided
+            self.trainloader = original_trainloader
 
         testset = torchvision.datasets.CIFAR10(
             root="./data", train=False, download=True, transform=transform
