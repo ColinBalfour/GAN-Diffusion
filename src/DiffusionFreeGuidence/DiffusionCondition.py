@@ -123,7 +123,7 @@ class GaussianDiffusionSampler(nn.Module):
             # hopefully works?
             t_tensor = torch.tensor([t]).to(x_T.device)
 
-            # beta_sqrt = betas[t].sqrt()
+            beta_sqrt = betas[t].sqrt()
 
             x_t = (
                 1
@@ -133,8 +133,8 @@ class GaussianDiffusionSampler(nn.Module):
                     - ((1 - a_t) / sqrt_one_minus_alphas_bar[t])
                     * self.model(x_t, t_tensor, labels)
                 )
-                # + beta_sqrt * z
-                + sqrt_one_minus_alphas_bar[t] * z
+                + beta_sqrt * z
+                # + sqrt_one_minus_alphas_bar[t] * z
             )
 
             assert torch.isnan(x_t).int().sum() == 0, "nan in tensor."

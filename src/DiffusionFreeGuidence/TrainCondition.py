@@ -165,7 +165,7 @@ def eval(modelConfig: Dict):
         )
         sampledImgs = sampler(noisyImage, labels)
         sampledImgs = sampledImgs * 0.5 + 0.5  # [0 ~ 1]
-        print(sampledImgs)
+        # print(sampledImgs)
         save_image(
             sampledImgs,
             os.path.join(modelConfig["sampled_dir"], modelConfig["sampledImgName"]),

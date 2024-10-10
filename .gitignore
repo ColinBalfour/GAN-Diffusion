@@ -164,3 +164,4 @@ cython_debug/
 
 *.pt
 src/CIFAR10
+src/GeneratedImgs
