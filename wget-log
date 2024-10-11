@@ -1,0 +1,11 @@
+--2024-10-11 01:47:12--  https://attachments.office.net/owa/knluu%40wpi.edu/service.svc/s/GetFileAttachment?id=AAMkADYxM2ZjOWI3LTdlNWEtNDk4OC05NzIyLWE3MjJjM2M0MGEwNABGAAAAAADJ9%2BEZIFTOS775nNQRBnkxBwA9%2BR49B%2F%2FsSYIaSPVdu6w1AAAAAAEMAAA9%2BR49B%2F%2FsSYIaSPVdu6w1AAI6ZlivAAABEgAQALzRpBES3uJJgOWluCBwoJk%3D
+Resolving attachments.office.net (attachments.office.net)... 52.96.191.194, 52.96.79.242, 52.96.79.146, ...
+Connecting to attachments.office.net (attachments.office.net)|52.96.191.194|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://outlook.office365.com/owa/knluu@wpi.edu/service.svc/s/GetAttachmentDownloadToken?redirect=%2fowa%2fknluu%40wpi.edu%2fservice.svc%2fs%2fGetFileAttachment%3fid%3dAAMkADYxM2ZjOWI3LTdlNWEtNDk4OC05NzIyLWE3MjJjM2M0MGEwNABGAAAAAADJ9%252bEZIFTOS775nNQRBnkxBwA9%252bR49B%252f%252fsSYIaSPVdu6w1AAAAAAEMAAA9%252bR49B%252f%252fsSYIaSPVdu6w1AAI6ZlivAAABEgAQALzRpBES3uJJgOWluCBwoJk%253d [following]
+--2024-10-11 01:47:13--  https://outlook.office365.com/owa/knluu@wpi.edu/service.svc/s/GetAttachmentDownloadToken?redirect=%2fowa%2fknluu%40wpi.edu%2fservice.svc%2fs%2fGetFileAttachment%3fid%3dAAMkADYxM2ZjOWI3LTdlNWEtNDk4OC05NzIyLWE3MjJjM2M0MGEwNABGAAAAAADJ9%252bEZIFTOS775nNQRBnkxBwA9%252bR49B%252f%252fsSYIaSPVdu6w1AAAAAAEMAAA9%252bR49B%252f%252fsSYIaSPVdu6w1AAI6ZlivAAABEgAQALzRpBES3uJJgOWluCBwoJk%253d
+Resolving outlook.office365.com (outlook.office365.com)... 52.96.157.66, 52.96.157.114, 52.96.79.18, ...
+Connecting to outlook.office365.com (outlook.office365.com)|52.96.157.66|:443... connected.
+HTTP request sent, awaiting response... 401 
+
+Username/Password Authentication Failed.

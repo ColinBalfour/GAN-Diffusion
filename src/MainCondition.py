@@ -6,7 +6,7 @@ torch.manual_seed(12)
 
 def main(model_config=None):
     modelConfig = {
-        "state": "train",  # or eval
+        "state": "eval",  # or eval
         "epoch": 70,
         "batch_size": 80,
         "T": 500,
@@ -16,7 +16,7 @@ def main(model_config=None):
         "dropout": 0.15,
         "lr": 1e-4,
         "multiplier": 2.5,
-        "beta_1": 1e-4,
+        "beta_1": 1e-6,
         "beta_T": 0.028,
         "img_size": 32,
         "grad_clip": 1.0,
