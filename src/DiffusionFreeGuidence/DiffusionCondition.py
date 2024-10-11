@@ -15,6 +15,19 @@ def extract(v, t, x_shape):
     return out.view([t.shape[0]] + [1] * (len(x_shape) - 1))
 
 
+def cosine_linspace(start, end, steps):
+    # Create a linearly spaced tensor from 0 to pi
+    x = torch.linspace(0, torch.pi, steps)
+
+    # Apply cosine to the tensor
+    y = torch.cos(x)
+
+    # Scale and shift the cosine values to match the desired range
+    y = y * (end - start) / 2 + (start + end) / 2
+
+    return y
+
+
 class GaussianDiffusionTrainer(nn.Module):
     def __init__(self, model, beta_1, beta_T, T):
         super().__init__()
@@ -25,9 +38,13 @@ class GaussianDiffusionTrainer(nn.Module):
         # YOUR IMPLEMENTATION HERE!
 
         # Precompute and store the parameters for performing noise addition for a given timestep.
-        betas = torch.linspace(
+        betas = cosine_linspace(
             beta_1, beta_T, T
-        )  # Linear schedule from beta_1 to beta_T
+        )  # cosine schedule from beta_1 to beta_T
+
+        # betas = torch.linspace(
+        #     beta_1, beta_T, T
+        # )  # Linear schedule from beta_1 to beta_T
 
         # Get the betas in beta_1, beta_T range
         self.register_buffer("betas", betas)
