@@ -67,9 +67,10 @@ def eval(modelConfig: Dict, idx):
         # print(sampledImgs)
         t = time.time()
         for i, img in enumerate(sampledImgs):
+            label = labels[i].item()
             ndarr = img.mul(255).add_(0.5).clamp_(0, 255).permute(1, 2, 0).to("cpu", torch.uint8).numpy()
             im = Image.fromarray(ndarr)
-            im.save(os.path.join(modelConfig["sampled_dir"], f"{(idx + i)}".zfill(4) + ".png"))
+            im.save(os.path.join(modelConfig["sampled_dir"], f"{label}/{str(idx + i).zfill(4)}.png"))
         print(f"Time to save: {time.time() - t}")
 
 def main(model_config=None):
@@ -101,7 +102,7 @@ def main(model_config=None):
     if model_config is not None:
         modelConfig = model_config
     
-    eval(modelConfig, 1)
+    eval(modelConfig, 0)
     
     # for i in range(0, 5000, modelConfig["batch_size"]):
     #     eval(modelConfig, i)
