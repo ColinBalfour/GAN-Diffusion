@@ -1,7 +1,7 @@
 from DiffusionFreeGuidence.TrainCondition import train, eval
 import torch
 
-torch.manual_seed(1)
+torch.manual_seed(12)
 
 
 def main(model_config=None):
