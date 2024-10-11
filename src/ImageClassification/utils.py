@@ -29,12 +29,14 @@ class Pipeline:
             trainset, batch_size=32, shuffle=True, num_workers=2
         )
 
-        if synthetic_data_loader is not None:
-            # Combine original CIFAR-10 data with synthetic data
-            self.trainloader = torch.utils.data.ConcatDataset([original_trainloader, synthetic_data_loader])
-        else:
-            # Only use original data if no synthetic data is provided
-            self.trainloader = original_trainloader
+        # if synthetic_data_loader is not None:
+        #     # Combine original CIFAR-10 data with synthetic data
+        #     self.trainloader = torch.utils.data.ConcatDataset(
+        #         [original_trainloader.dataset, synthetic_data_loader.dataset]
+        #     )
+        # else:
+        # Only use original data if no synthetic data is provided
+        self.trainloader = original_trainloader.dataset
 
         testset = torchvision.datasets.CIFAR10(
             root="./data", train=False, download=True, transform=transform
@@ -43,18 +45,7 @@ class Pipeline:
             testset, batch_size=32, shuffle=False, num_workers=2
         )
 
-        self.classes = (
-            "plane",
-            "car",
-            "bird",
-            "cat",
-            "deer",
-            "dog",
-            "frog",
-            "horse",
-            "ship",
-            "truck",
-        )
+        self.classes = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
         self.lossFunc = nn.CrossEntropyLoss()
 
@@ -64,7 +55,7 @@ class Pipeline:
         epochloss = 0
         for batchcount, (images, labels) in enumerate(self.trainloader):
             images = images.to(self.device)
-            labels = labels.to(self.device)
+            labels = torch.tensor([labels]).to(self.device)
 
             # labels = torch.eye(len(classes))[labels].to(device)
             # pdb.set_trace()
