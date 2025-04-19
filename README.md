@@ -1,7 +1,4 @@
-# rbe474x_p4
+#  Gaussian Diffusion Model developed from scratch!
 
-**Please do not make a public fork of this repo.**
-
-Entry point is the ipynb file in the repo root directory.
-
-
+Trained on CIFAR-10 images, used for data augmentation with a classification network
+The data-augmentation approach with our diffusion model showed a significant increase in performance compared to using only CIFAR-10 data
